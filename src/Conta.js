@@ -19,12 +19,16 @@ class Conta {
     depositar(valor) {
         if(this.ativo) {
             this.saldo += valor;
+        } else {
+            throw new Error("Conta inativa! Nao pode depositar!");
         }
     }
 
     sacar(valor) {
         if(this.ativo && this.saldo - valor >= 0) {
             this.saldo -= valor;
+        } else {
+            throw new Error("Conta inativa ou saldo inferior ao valor de saque!");
         }
     }
 }

@@ -7,13 +7,13 @@ describe("Conta", () => {
     let depositoInicial,
         saqueValido,
         saqueInvalido,
-        saldo;
+        saldoZero;
 
     beforeAll(() => {
         depositoInicial = 100;
         saqueValido = 70;
         saqueInvalido = 110;
-        saldo = 0;
+        saldoZero = 0;
     });
 
     beforeEach(() => {
@@ -28,9 +28,10 @@ describe("Conta", () => {
 
     test("Não deve depositar com conta inativa", () => {
         conta.inativar();
-        conta.depositar(depositoInicial);
 
-        expect(conta.getSaldo()).toBe(saldo);
+        expect(() => conta.depositar(depositoInicial)).toThrowError(new Error("Conta inativa! Nao pode depositar!"));
+
+        expect(conta.getSaldo()).toBe(saldoZero);
     });
 
     test("Deve sacar com conta ativa e saldo maior que o valor de saque", () => {
@@ -43,14 +44,15 @@ describe("Conta", () => {
     test("Não deve sacar com conta inativa", () => {
         conta.depositar(depositoInicial);
         conta.inativar();
-        conta.sacar(saqueValido);
+
+        expect(() => conta.sacar(saqueValido)).toThrowError(new Error("Conta inativa ou saldo inferior ao valor de saque!"));
 
         expect(conta.getSaldo()).toBe(depositoInicial);
     });
 
     test("Não deve sacar com conta ativa e saldo menor que o valor de saque", () => {
         conta.depositar(depositoInicial);
-        conta.sacar(saqueInvalido);
+        expect(() => conta.sacar(saqueInvalido)).toThrowError(new Error("Conta inativa ou saldo inferior ao valor de saque!"));
 
         expect(conta.getSaldo()).toBe(depositoInicial);
     });
